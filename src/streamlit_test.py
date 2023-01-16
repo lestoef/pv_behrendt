@@ -11,8 +11,10 @@ from datetime import datetime, timedelta
 
 # add your Client-ID and Client-secret from the API Client configuration GUI to
 # your environment variable first
-IPNT_CLIENT_ID = os.environ.get('IPNT_CLIENT_ID')
-IPNT_CLIENT_SECRET = os.environ.get('IPNT_CLIENT_SECRET')
+# IPNT_CLIENT_ID = os.environ.get('IPNT_CLIENT_ID')
+IPNT_CLIENT_ID = st.text_input('IPNT_CLIENT_ID')
+# IPNT_CLIENT_SECRET = os.environ.get('IPNT_CLIENT_SECRET')
+IPNT_CLIENT_SECRET = st.text_input('IPNT_CLIENT_SECRET')
 print(IPNT_CLIENT_ID, IPNT_CLIENT_SECRET)
 
 ACCESS_TOKEN_URL = "https://identity.netztransparenz.de/users/connect/token"
@@ -41,7 +43,7 @@ print(response.text, file = sys.stdout)
 
 
 end_datetime = datetime.now()
-start_datetime = end_datetime-timedelta(weeks=2)
+start_datetime = end_datetime-timedelta(days=3)
 print(start_datetime, end_datetime)
 st.write(start_datetime, end_datetime)
 
@@ -50,7 +52,7 @@ myURL = f"https://ds.netztransparenz.de/api/v1/data/vermarktung/VermarktungEpex/
 response = requests.get(myURL, headers = {'Authorization': 'Bearer {}'.format(TOKEN)})
 print(response.text, file = sys.stdout)
 
-rawData = pd.read_csv(io.StringIO(response.content.decode('utf-8')), delimiter=';')
+rawData = pd.read_csv(io.StringIO(response.content.decode('utf-8')), delimiter=';').sort_index(ascending=False)
 
 
 st.write(rawData)
